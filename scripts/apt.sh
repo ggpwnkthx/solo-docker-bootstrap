@@ -29,3 +29,7 @@ sudo apt-get update
 
 # Install the latest version
 sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+
+# Ensure current user is in the docker group
+sudo usermod -aG docker $USER
+newgrp docker
