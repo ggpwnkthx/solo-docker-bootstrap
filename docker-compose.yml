@@ -6,6 +6,8 @@ services:
     command:
       - "--providers.docker=true"
       - "--log.level=ERROR"
+      - '--api=true'
+      - '--api.dashboard=true'
       - "--entrypoints.web.address=:80"
       - "--entrypoints.websecure.address=:443"
       - "--certificatesresolvers.letsencrypt.acme.httpchallenge=true"
@@ -20,10 +22,22 @@ services:
       - "/var/run/docker.sock:/var/run/docker.sock"
       - "letsencrypt_data:/letsencrypt"
     labels:
-      - "traefik.http.routers.http-catchall.rule=hostregexp(`{host:.+}`)"
-      - "traefik.http.routers.http-catchall.entrypoints=web"
-      - "traefik.http.routers.http-catchall.middlewares=redirect-to-https"
-      - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
+      - 'traefik.enable=true'
+      # HTTP Catchall for redirecting HTTP -> HTTPS
+      - 'traefik.http.routers.http-catchall.rule=PathPrefix(`/`)'
+      - 'traefik.http.routers.http-catchall.entrypoints=web'
+      - 'traefik.http.routers.http-catchall.middlewares=redirect-to-https'
+      - 'traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https'
+      # Traefik dashboard
+      - 'traefik.http.routers.traefik.rule=(Host(`traefik.${PRIMARY_DOMAIN_NAME}`)) && (PathPrefix(`/traefik`) || PathPrefix(`/api`))' # Put in your domain
+      - 'traefik.http.routers.traefik.entrypoints=websecure'
+      - 'traefik.http.routers.traefik.tls.certresolver=letsencrypt'
+      - 'traefik.http.routers.traefik.service=api@internal'
+      # - 'traefik.http.services.api@internal.loadbalancer.server.port=8080' # Required in swarms, https://doc.traefik.io/traefik/v2.0/routing/providers/docker/#services
+      # - 'traefik.http.routers.traefik.middlewares=traefik-auth'
+      # - 'traefik.http.middlewares.traefik-auth.basicauth.users=admin:$$apr1$$8EVjn/nj$$GiLUZqcbueTFeD23SuB6x0' # username: admin, password: admin
+      - 'traefik.http.routers.traefik.middlewares=strip'
+      - 'traefik.http.middlewares.strip.stripprefix.prefixes=/traefik'
   portainer:
     image: portainer/portainer-ce:latest
     container_name: portainer
@@ -39,13 +53,13 @@ services:
       - "traefik.http.routers.frontend.entrypoints=websecure"
       - "traefik.http.services.frontend.loadbalancer.server.port=9000"
       - "traefik.http.routers.frontend.service=frontend"
-      - "traefik.http.routers.frontend.tls.certresolver=leresolver"
+      - "traefik.http.routers.frontend.tls.certresolver=letsencrypt"
       # Edge
       - "traefik.http.routers.edge.rule=Host(`edge.${PRIMARY_DOMAIN_NAME}`)"
       - "traefik.http.routers.edge.entrypoints=websecure"
       - "traefik.http.services.edge.loadbalancer.server.port=8000"
       - "traefik.http.routers.edge.service=edge"
-      - "traefik.http.routers.edge.tls.certresolver=leresolver"
+      - "traefik.http.routers.edge.tls.certresolver=letsencrypt"
 
 volumes:
   letsencrypt_data:
