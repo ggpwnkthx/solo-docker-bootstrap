@@ -3,41 +3,32 @@ services:
     image: traefik:v2.11
     container_name: traefik
     restart: unless-stopped
+    command:
+      - "--providers.docker=true"
+      - "--log.level=ERROR"
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.websecure.address=:443"
+      - "--certificatesresolvers.letsencrypt.acme.httpchallenge=true"
+      - "--certificatesresolvers.letsencrypt.acme.httpchallenge.entrypoint=web"
+      - "--certificatesresolvers.letsencrypt.acme.email=${ACME_EMAIL}"
+      - "--certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json"
+      - "--certificatesResolvers.letsencrypt.acme.caServer=https://acme-staging-v02.api.letsencrypt.org/directory"
     ports:
       - "80:80"
       - "443:443"
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock"
       - "letsencrypt_data:/letsencrypt"
-    command:
-      - "--log.level=DEBUG"
-      - "--api.insecure=true"
-      - "--providers.docker=true"
-      - "--log.level=ERROR"
-      - "--entrypoints.websecure.address=:443"
-      - "--entrypoints.web.address=:80"
-      - "--entrypoints.web.http.redirections.entryPoint.to=websecure"
-      - "--entrypoints.web.http.redirections.entryPoint.scheme=https"
-      - "--entrypoints.web.http.redirections.entrypoint.permanent=true"
-      - "--certificatesresolvers.letsencrypt.acme.httpchallenge=true"
-      - "--certificatesresolvers.letsencrypt.acme.httpchallenge.entrypoint=web"
-      - "--certificatesresolvers.letsencrypt.acme.email=${ACME_EMAIL}"
-      - "--certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json"
-      - "--certificatesResolvers.letsencrypt.acme.caServer=https://acme-staging-v02.api.letsencrypt.org/directory"
-      # Redirect HTTP to HTTPS
-      - "--entrypoints.web.http.redirections.entryPoint.to=websecure"
-      - "--entrypoints.web.http.redirections.entryPoint.scheme=https"
-      - "--entrypoints.web.http.redirections.entryPoint.permanent=true"
     labels:
       - "traefik.http.routers.http-catchall.rule=hostregexp(`{host:.+}`)"
       - "traefik.http.routers.http-catchall.entrypoints=web"
       - "traefik.http.routers.http-catchall.middlewares=redirect-to-https"
       - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
   portainer:
-    image: portainer/portainer-ce
-    command: -H unix:///var/run/docker.sock --admin-password="${ADMIN_PASSWORD}"
+    image: portainer/portainer-ce:latest
     container_name: portainer
     restart: unless-stopped
+    command: -H unix:///var/run/docker.sock --admin-password="${ADMIN_PASSWORD}"
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock"
       - "portainer_data:/data"
@@ -49,7 +40,6 @@ services:
       - "traefik.http.services.frontend.loadbalancer.server.port=9000"
       - "traefik.http.routers.frontend.service=frontend"
       - "traefik.http.routers.frontend.tls.certresolver=leresolver"
-
       # Edge
       - "traefik.http.routers.edge.rule=Host(`edge.${PRIMARY_DOMAIN_NAME}`)"
       - "traefik.http.routers.edge.entrypoints=websecure"
