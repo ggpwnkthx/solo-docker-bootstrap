@@ -15,7 +15,7 @@ fi
 # Check for PRIMARY_DOMAIN_NAME
 if [ ! $PRIMARY_DOMAIN_NAME ]; then
   echo "PRIMARY_DOMAIN_NAME not found in .env file."
-  read "Enter a primary domain name to use: " primary_domain_name
+  read -p "Enter a primary domain name to use: " primary_domain_name
   echo
   # Replace or append ADMIN_PASSWORD in .env file
   if grep -q "^PRIMARY_DOMAIN_NAME=" .env; then
@@ -30,7 +30,7 @@ fi
 # Check for ACME_EMAIL
 if [ ! $ACME_EMAIL ]; then
   echo "ACME_EMAIL not found in .env file."
-  read "Enter an email address to use: " acme_email
+  read -p "Enter an email address to use: " acme_email
   echo
   # Replace or append ADMIN_PASSWORD in .env file
   if grep -q "^ACME_EMAIL=" .env; then
