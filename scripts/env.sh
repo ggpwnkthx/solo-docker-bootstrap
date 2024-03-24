@@ -47,7 +47,7 @@ if [ ! $ADMIN_PASSWORD ]; then
   echo "ADMIN_PASSWORD not found in .env file."
   read -sp "Enter the admin password to use: " admin_password
   echo
-  hashed_password=$(generate_hashed_password "$admin_password")
+  hashed_password=$(hash_password "$admin_password")
   # Replace or append ADMIN_PASSWORD in .env file
   if grep -q "^ADMIN_PASSWORD=" .env; then
     # Use the 'sed' command to replace the line
