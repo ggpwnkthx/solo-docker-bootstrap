@@ -18,5 +18,5 @@ fi
 /bin/bash ./scripts/preflight.sh
 
 # Ensure user has docker group
-exec sg docker "/bin/bash ./scripts/env.sh"
-exec sg docker "docker compose up -d"
+sg docker "/bin/bash ./scripts/env.sh"
+sg docker "docker compose up -d"
