@@ -47,8 +47,8 @@ if [ -z "$admin_password" ]; then
   hashed_password=$(hash_password "$admin_password")
   # Replace or append ADMIN_PASSWORD in .env file
   if grep -q "^ADMIN_PASSWORD=" .env; then
-    sed -i "/^ADMIN_PASSWORD=/c\ADMIN_PASSWORD=${hashed_password//\$/\\\$}" .env
+    sed -i "/^ADMIN_PASSWORD=/c\ADMIN_PASSWORD=${hashed_password//\$/\$\$}" .env
   else
-    echo "ADMIN_PASSWORD=${hashed_password//\$/\\\$}" >> .env
+    echo "ADMIN_PASSWORD=${hashed_password//\$/\$\$}" >> .env
   fi
 fi
