@@ -17,8 +17,8 @@ fi
 # Handle prerequisites
 /bin/bash ./scripts/preflight.sh
 
-# Set required environmental values
+(newgrp docker << 'EOF'
 /bin/bash ./scripts/env.sh
-
-# Build/Update Containers
 docker compose up -d
+EOF
+)
