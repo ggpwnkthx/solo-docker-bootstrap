@@ -58,5 +58,6 @@ volumes:
   portainer_data:
 
 networks:
-  traefik_proxy:
-    external: true
+  default:
+    external:
+      name: traefik_proxy
