@@ -29,7 +29,7 @@ services:
       - 'traefik.http.routers.http-catchall.middlewares=redirect-to-https'
       - 'traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https'
       # Traefik dashboard
-      - 'traefik.http.routers.traefik.rule=(Host(`traefik.${PRIMARY_DOMAIN_NAME}`)) && (PathPrefix(`/traefik`) || PathPrefix(`/api`))' # Put in your domain
+      - 'traefik.http.routers.traefik.rule=Host(`traefik.${PRIMARY_DOMAIN_NAME}`)'
       - 'traefik.http.routers.traefik.entrypoints=websecure'
       - 'traefik.http.routers.traefik.tls.certresolver=letsencrypt'
       - 'traefik.http.routers.traefik.service=api@internal'
