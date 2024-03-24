@@ -2,7 +2,7 @@
 
 # Function to generate hashed password
 hash_password() {
-  echo "$1" | htpasswd -niB user | cut -d: -f2
+  echo "$1" | htpasswd -niB $2 | cut -d: -f2
 }
 
 # Helper function to get value from .env file
@@ -44,7 +44,7 @@ if [ -z "$admin_password" ]; then
   echo "ADMIN_PASSWORD not found in .env file."
   read -sp "Enter the admin password to use: " admin_password
   echo
-  hashed_password=$(hash_password "$admin_password")
+  hashed_password=$(hash_password "$admin_password" admin)
   # Replace or append ADMIN_PASSWORD in .env file
   if grep -q "^ADMIN_PASSWORD=" .env; then
     sed -i "/^ADMIN_PASSWORD=/c\ADMIN_PASSWORD=${hashed_password//\$/\$\$}" .env
