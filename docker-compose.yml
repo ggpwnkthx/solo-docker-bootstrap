@@ -1,4 +1,4 @@
-version: '3.3'
+version: '3.8'
 
 services:
   traefik:
@@ -58,6 +58,5 @@ volumes:
   portainer_data:
 
 networks:
-  default:
-    external:
-      name: traefik_proxy
+  traefik_proxy:
+    external: true
