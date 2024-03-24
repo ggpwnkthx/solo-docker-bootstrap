@@ -16,9 +16,9 @@ fi
 
 # Handle prerequisites
 /bin/bash ./scripts/preflight.sh
-/bin/bash ./scripts/env.sh
 
-(newgrp docker << 'EOF'
+# Ensure user has docker group
+exec sg docker "$0 $*"
+
+/bin/bash ./scripts/env.sh
 docker compose up -d
-EOF
-)
