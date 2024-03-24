@@ -24,6 +24,7 @@ if [ ! $PRIMARY_DOMAIN_NAME ]; then
   else
     # Append the hashed PRIMARY_DOMAIN_NAME to .env file
     echo "PRIMARY_DOMAIN_NAME=$primary_domain_name" >> .env
+  fi
 fi
 
 # Check for ACME_EMAIL
@@ -38,6 +39,7 @@ if [ ! $ACME_EMAIL ]; then
   else
     # Append the hashed ACME_EMAIL to .env file
     echo "ACME_EMAIL=$acme_email" >> .env
+  fi
 fi
 
 # Check for ADMIN_PASSWORD
@@ -53,4 +55,5 @@ if [ ! $ADMIN_PASSWORD ]; then
   else
     # Append the hashed ADMIN_PASSWORD to .env file
     echo "ADMIN_PASSWORD=$hashed_password" >> .env
+  fi
 fi
