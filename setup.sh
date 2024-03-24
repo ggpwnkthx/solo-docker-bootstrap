@@ -17,5 +17,8 @@ fi
 # Handle prerequisites
 /bin/bash ./scripts/preflight.sh
 
+# Set required environmental values
+/bin/bash ./scripts/env.sh
+
 # Build/Update Containers
 docker compose up -d
