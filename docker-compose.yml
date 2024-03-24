@@ -34,10 +34,8 @@ services:
       - 'traefik.http.routers.traefik.tls.certresolver=letsencrypt'
       - 'traefik.http.routers.traefik.service=api@internal'
       # - 'traefik.http.services.api@internal.loadbalancer.server.port=8080' # Required in swarms, https://doc.traefik.io/traefik/v2.0/routing/providers/docker/#services
-      # - 'traefik.http.routers.traefik.middlewares=traefik-auth'
-      # - 'traefik.http.middlewares.traefik-auth.basicauth.users=admin:$$apr1$$8EVjn/nj$$GiLUZqcbueTFeD23SuB6x0' # username: admin, password: admin
-      # - 'traefik.http.routers.traefik.middlewares=strip'
-      # - 'traefik.http.middlewares.strip.stripprefix.prefixes=/traefik'
+      - 'traefik.http.routers.traefik.middlewares=traefik-auth'
+      - 'traefik.http.middlewares.traefik-auth.basicauth.users=admin:${ADMIN_PASSWORD}'
   portainer:
     image: portainer/portainer-ce:latest
     container_name: portainer
