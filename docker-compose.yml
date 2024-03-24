@@ -14,7 +14,7 @@ services:
       - "--certificatesresolvers.letsencrypt.acme.httpchallenge.entrypoint=web"
       - "--certificatesresolvers.letsencrypt.acme.email=${ACME_EMAIL}"
       - "--certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json"
-      - "--certificatesResolvers.letsencrypt.acme.caServer=https://acme-staging-v02.api.letsencrypt.org/directory"
+      # - "--certificatesResolvers.letsencrypt.acme.caServer=https://acme-staging-v02.api.letsencrypt.org/directory"
     ports:
       - "80:80"
       - "443:443"
@@ -33,7 +33,6 @@ services:
       - 'traefik.http.routers.traefik.entrypoints=websecure'
       - 'traefik.http.routers.traefik.tls.certresolver=letsencrypt'
       - 'traefik.http.routers.traefik.service=api@internal'
-      # - 'traefik.http.services.api@internal.loadbalancer.server.port=8080' # Required in swarms, https://doc.traefik.io/traefik/v2.0/routing/providers/docker/#services
       - 'traefik.http.routers.traefik.middlewares=traefik-auth'
       - 'traefik.http.middlewares.traefik-auth.basicauth.users=admin:${ADMIN_PASSWORD}'
   portainer:
