@@ -35,7 +35,7 @@ services:
       - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
   portainer:
     image: portainer/portainer-ce
-    command: -H unix:///var/run/docker.sock
+    command: -H unix:///var/run/docker.sock --admin-password="${ADMIN_PASSWORD}"
     container_name: portainer
     restart: unless-stopped
     volumes:
