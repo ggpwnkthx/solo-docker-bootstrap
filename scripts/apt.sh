@@ -4,7 +4,7 @@
 all_installed=true
 
 # Check if Docker packages are installed
-for pkg in htpassword docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin; do
+for pkg in apache2-utils docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin; do
   if ! dpkg -l | grep -qw $pkg; then
     echo "Package $pkg is not installed. Proceeding with installation..."
     all_installed=false
@@ -25,7 +25,7 @@ done
 
 # Add Docker's official GPG key:
 sudo apt-get update
-sudo apt-get install ca-certificates curl htpassword
+sudo apt-get install ca-certificates curl apache2-utils
 sudo install -m 0755 -d /etc/apt/keyrings
 sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
 sudo chmod a+r /etc/apt/keyrings/docker.asc
